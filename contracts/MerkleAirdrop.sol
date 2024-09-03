@@ -19,22 +19,26 @@ contract MerkleAirdrop {
     }
 
     function claimAirdrop(
+        address _address,
         uint256 amount,
         bytes32[] calldata merkleProof
     ) external {
-        require(!hasClaimed[msg.sender], "Airdrop already claimed.");
-        // bytes32 leaf = keccak256(abi.encodePacked(msg.sender, amount));
-        bytes32 leaf = keccak256(bytes.concat(keccak256(abi.encode(msg.sender, amount))));
+
+        require(_address != address(0), "Address Zero Detected.");
+
+        require(!hasClaimed[_address], "Airdrop already claimed.");
+        
+        bytes32 leaf = keccak256(bytes.concat(keccak256(abi.encode(_address, amount))));
 
         require(
             MerkleProof.verify(merkleProof, merkleRoot, leaf),
             "Invalid Merkle proof."
         );
 
-        hasClaimed[msg.sender] = true;
+        hasClaimed[_address] = true;
 
-        require(token.transfer(msg.sender, amount), "Token transfer failed.");
+        require(token.transfer(_address, amount), "Token transfer failed.");
 
-        emit AirdropClaimed(msg.sender, amount);
+        emit AirdropClaimed(_address, amount);
     }
 }

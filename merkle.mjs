@@ -2,9 +2,10 @@ import { StandardMerkleTree } from "@openzeppelin/merkle-tree";
 import fs from "fs";
 import csv from "csv-parser";
 
-const csvFilePath = "./airdrop.csv"; // CSV file of addresses and amount qualified.
-const searchAddress = "0x78731D3Ca6b7E34aC0F824c42a7cC18A495cabaB"; //One of the address in the csv file This is the address that wants to claim the reward. This is the msg.sender 
+const csvFilePath = "./airdrop.csv"; // Path to your CSV file
+const searchAddress = "0x78731D3Ca6b7E34aC0F824c42a7cC18A495cabaB"; // Address to search
 
+// Function to read the CSV file
 async function readCSV(filePath) {
   return new Promise((resolve, reject) => {
     const values = [];
@@ -20,6 +21,7 @@ async function readCSV(filePath) {
   });
 }
 
+// Function to generate the Merkle Tree
 async function generateMerkleTree() {
   try {
     const values = await readCSV(csvFilePath);
@@ -31,22 +33,24 @@ async function generateMerkleTree() {
   }
 }
 
+// Function to generate proof for a given address
 async function generateProof() {
-  const tree = StandardMerkleTree.load(
-    JSON.parse(fs.readFileSync("tree.json", "utf8"))
-  );
-  for (const [i, v] of tree.entries()) {
-    if (v[0] === searchAddress) {
-      const proof = tree.getProof(i);
-      console.log(i);
-      console.log("Value:", v);
-      console.log("Proof:", proof);
+  try {
+    const tree = StandardMerkleTree.load(
+      JSON.parse(fs.readFileSync("tree.json", "utf8"))
+    );
+    for (const [i, v] of tree.entries()) {
+      if (v[0] === searchAddress) {
+        const proof = tree.getProof(i);
+        console.log("Value:", v);
+        console.log("Proof:", proof);
+      }
     }
+  } catch (error) {
+    console.error("Error generating proof:", error);
   }
 }
 
-// Run this to generate the Merkle tree Hash
-generateMerkleTree();
-
-//Run this to generate Proof for based on the selected address.
-// generateProof();
+// Execute the functions
+await generateMerkleTree();
+await generateProof();
