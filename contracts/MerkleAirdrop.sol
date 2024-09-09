@@ -41,4 +41,8 @@ contract MerkleAirdrop {
 
         emit AirdropClaimed(_address, amount);
     }
+
+    function checkClaimStatus(address _address) external view returns(bool) {
+        return hasClaimed[_address];
+    }
 }

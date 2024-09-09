@@ -6,7 +6,7 @@ This project demonstrates how to implement a Merkle tree-based airdrop in Solidi
 
 A Solidity smart contract (MerkleAirdrop.sol) that verifies claims using a Merkle tree root and proofs.
 
-Off-chain scripts merkle.js written in Node.js to generate the Merkle tree and Merkle proofs.
+Off-chain scripts merkle.mjs written in Node.js to generate the Merkle tree and Merkle proofs.
 
 Instructions for deploying and testing the contract on Remix.
 
@@ -63,7 +63,7 @@ address,amount
 After adding the CSV file, generate the Merkle tree and Merkle root:
 
 ```
-node merkle.js
+node merkle.mjs
 ```
 
 This script has two functions **generateMerkleTree()** and **generateProof();**
@@ -104,7 +104,7 @@ merkleProof: The proof generated off-chain that proves their eligibility.
 6. Deploy the `MerkleAirdrop.sol` by passing the Merkle root (generated off-chain) and the the deployed ERC20 token (GTK.sol) contract address to the constructor.
    Testing the Airdrop
 
-## Testing the Airdrop
+## Testing the on Remix
 
 Once the contract is deployed, test the `claimAirdrop()` function:
 
@@ -126,6 +126,14 @@ When the claim is successful, the contract will emit an event:
 ```
 event Claimed(address indexed user, uint256 amount);
 ```
+
+## Running the test script.
+
+1. Clone the project to your local machine
+2. run `npm install` to install dependecies
+3. To generate merkle root run `node merkle.mjs`
+4. Run this command to simulate test `npx hardhat test`
+
 
 Resources
 
